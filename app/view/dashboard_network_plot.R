@@ -5,6 +5,7 @@ box::use(
   shiny[...],
   visNetwork[...],
   dplyr[...],
+  shinyWidgets[...],
 )
 
 #' @export
@@ -13,20 +14,50 @@ ui <- function(id) {
 
   shiny::tabPanel(
     "Network Plot",
-    # Sidebar Panel
-    shiny::sidebarPanel(
-      width = 2,
-      shiny::numericInput(
-        ns("network_plot_scale"),
-        label = "Scale Plot by:",
-        value = 2000,
-        step = 1),
-      p("FCM tends to plot off-screen. Drag up and left-ward to see it.")
+    shiny::column(
+      width = 2, offset = 0,
+      dropdownButton(
+        shiny::numericInput(
+          ns("network_plot_scale"),
+          label = "Scale Plot by:",
+          value = 2000,
+          step = 1
+        ),
+        circle = TRUE, icon = icon("gear"), width = "300px", size = "xs"
+      )
     ),
-    shiny::mainPanel(
-      visNetwork::visNetworkOutput(ns("fcm_network_proxy"))
-    )
+    visNetwork::visNetworkOutput(ns("fcm_network_proxy"))
   )
+
+  #visNetwork::visNetworkOutput(ns("fcm_network_proxy"))
+
+   # shiny::tabPanel(
+   #  "Network Plot",
+   #  # Sidebar Panel
+   #  shiny::sidebarPanel(
+   #    width = 2,
+   #    dropdownButton(
+   #      shiny::numericInput(
+   #        ns("network_plot_scale"),
+   #        label = "Scale Plot by:",
+   #        value = 2000,
+   #        step = 1
+   #      ),
+   #
+   #      circle = TRUE, icon = icon("gear"), width = "300px"
+   #    )
+   #  ),
+   #  #   shiny::numericInput(
+   #  #     ns("network_plot_scale"),
+   #  #     label = "Scale Plot by:",
+   #  #     value = 2000,
+   #  #     step = 1),
+   #  #   p("FCM tends to plot off-screen. Drag up and left-ward to see it.")
+   #  # ),
+   #  shiny::mainPanel(
+   #    visNetwork::visNetworkOutput(ns("fcm_network_proxy"))
+   #  )
+  # )
 }
 
 

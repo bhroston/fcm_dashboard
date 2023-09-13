@@ -8,12 +8,16 @@ box::use(
 
 # load packages
 box::use(
-  shiny[...]
+  shiny[...],
+  shinyWidgets[...],
+  htmltools[includeHTML]
 )
 
 #' @export
 ui <- function(id, data) { # needs to get passed a calculation
   ns <- NS(id)
+
+  lambda_help_html <- htmltools::includeHTML("app/static/help_html/lambda_help.html")
 
   shiny::sidebarPanel(
     width = 4,
@@ -25,24 +29,22 @@ ui <- function(id, data) { # needs to get passed a calculation
         shiny::selectInput(ns("squashing_function"), "Squashing function", choices = c("tanh", "sigmoid", "bivalent", "trivalent"), selected = "tanh")
       ),
       shiny::column(
-        width = 5,
+        width = 1,
+        shinyWidgets::dropdownButton(
+          tags$body(lambda_help_html),
+          size = "xs",
+          circle = TRUE, icon = icon("info"), width = "300px",
+          tooltip = shinyWidgets::tooltipOptions(title = "Lambda info")
+        )
+      ),
+      shiny::column(
+        width = 4,
         shiny::numericInput(ns("lambda"), "Lambda", min = 0, max = 1, value = 0.5, step = 0.1)
       )
     ),
     shiny::withMathJax(shiny::uiOutput(ns("f_squashing_formula"))),
     shiny::fluidRow(
-      #shiny::column(
-        #width = 5,
-        shiny::selectInput(ns("activation_function"), "Activation function", choices = c("Kosko (k)", "Modified-Kosko (mk)", "Rescale (r)"), selected = "Kosko (k)")
-        #),
-      # shiny::column(
-      #   width = 3,
-      #   shiny::numericInput(ns("k1"), "K1", min = 0, max = 1, value = 1, step = 0.1)
-      # ),
-      # shiny::column(
-      #   width = 3,
-      #   shiny::numericInput(ns("k2"), "K2", min = 0, max = 1, value = 1, step = 0.1)
-      # )
+      shiny::selectInput(ns("activation_function"), "Activation function", choices = c("Kosko (k)", "Modified-Kosko (mk)", "Rescale (r)"), selected = "Kosko (k)")
     ),
     shiny::withMathJax(shiny::uiOutput(ns("f_activation_formula"))),
     shiny::selectInput(ns("simplify_edges_selection"), "Simplify Edge Weights", choices = c("OFF", "Bivalent [0, 1]", "Trivalent [-1, 0, 1]"), selected = "OFF"),
